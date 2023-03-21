@@ -10,7 +10,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "fs": "0.0.1-security",
     "react": "18.2.0",
     "react-native": "0.71.4"
   },
