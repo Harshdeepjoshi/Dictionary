@@ -24,6 +24,7 @@ const SearchBar = params => {
     } else {
       if (inputRef.current) {
         inputRef.current.focus();
+        inputRef.current.clear(); // clear input field
       }
     }
   };
@@ -44,76 +45,36 @@ const SearchBar = params => {
   return (
     <View
       style={{
-        flexDirection: 'row',
-        height: '8%',
+        height: 72,
         justifyContent: 'center',
-        alignItems: 'center',
+        paddingHorizontal: 16,
       }}>
-      <Text
+      <View
         style={{
-          color: 'white',
-          flex: 1,
-          marginLeft: 25,
-          justifyContent: 'center',
+          flexDirection: 'row',
+          backgroundColor: 'white',
+          height: 40,
+          borderRadius: 20,
         }}>
-        AWSOME
-      </Text>
-      <TouchableOpacity onPress={handlePress}>
-        <View style={{textAlign: 'right', flexDirection: 'row'}}>
-          <Text
-            style={{
-              color: 'white',
-              paddingRight: 10,
-              fontWeight: 'bold',
-              fontSize: 12,
-            }}>
-            SEARCH
-          </Text>
+        <View style={{padding: 12, justifyContent: 'center'}}>
           <Image
-            source={require('../images/search.png')}
+            source={require('../images/searchBlack.png')}
             style={{
-              height: 12,
-              width: 12,
+              height: 16,
+              width: 16,
               resizeMode: 'stretch',
               alignItems: 'center',
-              marginRight: 25,
-              marginTop: 2.5,
             }}
           />
         </View>
-      </TouchableOpacity>
-      <Animated.View
-        style={{
-          transform: [{translateX}],
-          position: 'absolute',
-          top: '20%',
-          width: '100%',
-          height: 40,
-          flexDirection: 'row',
-          alignItems: 'center',
-          backgroundColor: 'white',
-          paddingHorizontal: 10,
-        }}>
         <TextInput
-          style={{flex: 1}}
-          placeholder="Search"
+          style={{flex: 1, width: '100%'}}
+          placeholder="Search a word"
           onChangeText={HandleTextChange}
           ref={inputRef}
           onSubmitEditing={handlePress}
         />
-        <TouchableOpacity onPress={handlePress}>
-          <Image
-            source={require('../images/searchBlack.png')}
-            style={{
-              height: 20,
-              width: 20,
-              marginTop: 5,
-              resizeMode: 'stretch',
-              alignItems: 'center',
-            }}
-          />
-        </TouchableOpacity>
-      </Animated.View>
+      </View>
     </View>
   );
 };

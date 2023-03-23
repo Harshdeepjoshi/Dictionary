@@ -6,13 +6,14 @@ const Meaning = props => {
     <View
       style={{
         backgroundColor: 'white',
-        height: '100%',
-        width: '95%',
-        margin: 10,
-        borderTopRightRadius: 20,
-        borderTopLeftRadius: 20,
+        margin: 16,
+        marginTop: 0,
+        borderRadius: 16,
+        minHeight: 150,
+        padding: 10,
       }}>
-      <Text style={{margin: 10}}>{props.meaning[0]}</Text>
+      <Text style={{color: '#757575'}}>Means:</Text>
+      <Text style={{color: 'black'}}>- {props.meaning[0]}</Text>
     </View>
   );
 };

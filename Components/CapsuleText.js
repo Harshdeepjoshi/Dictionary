@@ -1,40 +1,26 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {View, Text} from 'react-native';
 
 const CapsuleText = ({text}) => {
-  const [containerWidth, setContainerWidth] = useState(0);
-  const widths = {
-    Noun: 50,
-    Verb: 47,
-    Adjective: 71,
-    Adverb: 61,
-    Preposition: 83,
-  };
-  useEffect(() => {
-    if (widths[text]) {
-      setContainerWidth(widths[text]);
-    }
-  }, [text]);
-
   return (
-    <View style={{width: containerWidth}}>
-      <View
+    <View
+      style={{
+        backgroundColor: '#00000040',
+        borderRadius: 20,
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+
+        width: 'auto',
+      }}>
+      <Text
         style={{
-          backgroundColor: '#00000040',
-          borderRadius: 20,
-          paddingHorizontal: 10,
-          paddingVertical: 5,
+          fontSize: 12,
+          color: 'white',
+          textAlign: 'center',
+          fontWeight: 'bold',
         }}>
-        <Text
-          style={{
-            fontSize: 12,
-            color: 'white',
-            textAlign: 'center',
-            fontWeight: 'bold',
-          }}>
-          {text}
-        </Text>
-      </View>
+        {text}
+      </Text>
     </View>
   );
 };

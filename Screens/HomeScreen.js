@@ -89,19 +89,23 @@ const HomeScreen = params => {
   }
 
   function createObj(data) {
-    const meanings = [];
-    for (let i = 0; i < data.length; i++) {
-      meanings.push([data[i].split(') ')[1]]);
-      console.log("data[i].split(')')[0]", data[i].split(')')[1]);
-      console.log(meanings);
+    let meaning = data[0].split(')');
+    console.log('meaning', meaning);
+    let newMeaning = meaning[1];
+    for (let i = 2; i < meaning.length; i++) {
+      newMeaning = newMeaning + ')' + meaning[i];
     }
+
     const obj = {
-      word: data[0].split('(')[0],
-      LaxialCatagory: data[0].split(')')[0].split('(')[1],
-      meaning: meanings,
+      word: data[0].split(' (')[0],
+      LaxialCatagory: data[0].split(' (')[1].split(')')[0],
+      meaning: [newMeaning],
     };
+    console.log('meaning', obj.meaning);
+
     return obj;
   }
+
   function binarySearch(arr, x) {
     x = x.toLowerCase();
     let l = 0,
@@ -123,7 +127,7 @@ const HomeScreen = params => {
       return;
     }
     const data = selectFile(searchWord[0].toLowerCase());
-    console.log(data);
+    // console.log(data);
 
     const index = binarySearch(data, searchWord);
     console.log(index);
@@ -136,15 +140,17 @@ const HomeScreen = params => {
   };
   return (
     <View>
-      <SearchBar
-        searchWord={searchWord}
-        setSearchWord={setSearchWord}
-        handleSearch={searchingAlgo}
-      />
-      <Word
-        word={params.word.word}
-        LaxialCatagory={params.word.LaxialCatagory}
-      />
+      <View>
+        <SearchBar
+          searchWord={searchWord}
+          setSearchWord={setSearchWord}
+          handleSearch={searchingAlgo}
+        />
+        <Word
+          word={params.word.word}
+          LaxialCatagory={params.word.LaxialCatagory}
+        />
+      </View>
 
       <Meaning meaning={params.word.meaning} />
     </View>

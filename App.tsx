@@ -9,7 +9,7 @@ const App = () => {
   });
 
   return (
-    <View style={[{backgroundColor: '#00E9B2', height: '100%'}]}>
+    <View style={[{backgroundColor: '#4CAF50', height: '100%'}]}>
       <HomeScreen word={DisplayData} SetDisplayData={SetDisplayData} />
     </View>
   );

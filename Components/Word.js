@@ -27,20 +27,31 @@ const Word = params => {
   }, []);
 
   return (
-    <View style={{marginLeft: 25}}>
-      <Text style={{fontSize: 60, color: 'white'}}>{params.word}</Text>
-      <View style={{flexDirection: 'row', marginTop: 8}}>
+    <View style={{paddingVertical: 28, paddingTop: 12, alignItems: 'center'}}>
+      <Text
+        style={{
+          fontSize: 60,
+          color: '#FFFFFF',
+          textAlign: 'center',
+        }}>
+        {params.word}
+      </Text>
+      <View style={{flexDirection: 'row', maxWidth: '70%', flexWrap: 'wrap'}}>
         <CapsuleText text={params.LaxialCatagory} />
-        <TouchableOpacity onPress={speak} disabled={isSpeaking}>
+        <CapsuleText text={params.LaxialCatagory} />
+        <CapsuleText text={params.LaxialCatagory} />
+        <CapsuleText text={params.LaxialCatagory} />
+        <TouchableOpacity
+          onPress={speak}
+          disabled={isSpeaking}
+          style={{marginLeft: 8}}>
           <Image
             source={require('../images/speaker.png')}
             style={{
               height: 25,
               width: 25,
-              marginLeft: 30,
               resizeMode: 'stretch',
               alignItems: 'center',
-              marginRight: 25,
               opacity: isSpeaking ? 0.2 : 0.5,
             }}
           />
