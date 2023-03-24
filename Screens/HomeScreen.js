@@ -89,55 +89,78 @@ const HomeScreen = params => {
   }
 
   function createObj(data) {
-    let meaning = data[0].split(')');
-    console.log('meaning', meaning);
-    let newMeaning = meaning[1];
-    for (let i = 2; i < meaning.length; i++) {
-      newMeaning = newMeaning + ')' + meaning[i];
+    let MeaningArray = [];
+    let LaxialCatagory = [];
+    for (let i = 0; i < data.length; i++) {
+      let meaning = data[i].split(')');
+      let newMeaning = meaning[1];
+      for (let i = 2; i < meaning.length; i++) {
+        newMeaning = newMeaning + ')' + meaning[i];
+      }
+      if (data[i].split(' (')[1].split(')')[0] != '') {
+        LaxialCatagory.push(data[i].split(' (')[1].split(')')[0]);
+      }
+      MeaningArray.push(newMeaning);
     }
-
     const obj = {
       word: data[0].split(' (')[0],
-      LaxialCatagory: data[0].split(' (')[1].split(')')[0],
-      meaning: [newMeaning],
+      LaxialCatagory: LaxialCatagory.filter(
+        (value, index) => LaxialCatagory.indexOf(value) === index,
+      ),
+      meaning: MeaningArray,
     };
-    console.log('meaning', obj.meaning);
-
     return obj;
   }
 
   function binarySearch(arr, x) {
-    x = x.toLowerCase();
+    x = x.toLowerCase().replace(/\s+/g, '');
     let l = 0,
       r = arr.length - 1;
     while (l <= r) {
       let m = l + Math.floor((r - l) / 2);
-
-      let res = x.localeCompare(arr[m].split(' (')[0].toLowerCase());
-      // Check if x is present at mid
+      let res = x.localeCompare(
+        arr[m].split(' (')[0].toLowerCase().replace(/\s+/g, ''),
+      );
       if (res == 0) return m;
-
       if (res > 0) l = m + 1;
       else r = m - 1;
     }
     return -1;
   }
+
   const searchingAlgo = wordToSearch => {
     if (searchWord === '') {
       return;
     }
     const data = selectFile(searchWord[0].toLowerCase());
-    // console.log(data);
-
     const index = binarySearch(data, searchWord);
-    console.log(index);
     if (index === -1) {
       alert(`Word ${searchWord} not found`);
     } else {
-      console.log(data[index]);
-      params.SetDisplayData(createObj([data[index]]));
+      let word = data[index].split(' (')[0].toLowerCase();
+      let WordArray = [];
+      let low = index;
+      let up = index;
+
+      while (low > 0 && data[low - 1].split(' (')[0].toLowerCase() === word) {
+        low--;
+      }
+
+      while (
+        up < data.length - 1 &&
+        data[up + 1].split(' (')[0].toLowerCase() === word
+      ) {
+        up++;
+      }
+
+      for (let i = low; i <= up; i++) {
+        WordArray.push(data[i]);
+      }
+
+      params.SetDisplayData(createObj(WordArray));
     }
   };
+
   return (
     <View>
       <View>

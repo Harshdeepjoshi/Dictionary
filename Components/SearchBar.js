@@ -17,15 +17,9 @@ const SearchBar = params => {
     params.setSearchWord(text);
   };
   const handlePress = () => {
-    setOpenSearch(!openSearch);
-    if (openSearch === true && params.searchWord != '') {
+    if (params.searchWord != '') {
       params.handleSearch();
       Keyboard.dismiss();
-    } else {
-      if (inputRef.current) {
-        inputRef.current.focus();
-        inputRef.current.clear(); // clear input field
-      }
     }
   };
 
@@ -74,6 +68,22 @@ const SearchBar = params => {
           ref={inputRef}
           onSubmitEditing={handlePress}
         />
+        <TouchableOpacity
+          onPress={handlePress}
+          style={{
+            paddingHorizontal: 10,
+            borderBottomRightRadius: 20,
+            borderTopRightRadius: 20,
+            justifyContent: 'center',
+            backgroundColor: '#03A9F4',
+          }}>
+          <Text
+            style={{
+              color: '#212121',
+            }}>
+            Search
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

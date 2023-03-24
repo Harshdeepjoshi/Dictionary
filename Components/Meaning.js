@@ -2,6 +2,8 @@ import React from 'react';
 import {Text, View} from 'react-native';
 
 const Meaning = props => {
+  const arr = ['a', 'b', 'c', 'd'];
+
   return (
     <View
       style={{
@@ -13,7 +15,15 @@ const Meaning = props => {
         padding: 10,
       }}>
       <Text style={{color: '#757575'}}>Means:</Text>
-      <Text style={{color: 'black'}}>- {props.meaning[0]}</Text>
+
+      {props.meaning.map(mean => {
+        return (
+          <View style={{flexDirection: 'row'}}>
+            <Text>- </Text>
+            <Text style={{color: 'black'}}>{mean}</Text>
+          </View>
+        );
+      })}
     </View>
   );
 };

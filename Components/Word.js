@@ -36,10 +36,13 @@ const Word = params => {
         }}>
         {params.word}
       </Text>
-      <View style={{flexDirection: 'row', maxWidth: '70%', flexWrap: 'wrap'}}>
-        <CapsuleText text={params.LaxialCatagory} />
-        <CapsuleText text={params.LaxialCatagory} />
-        <CapsuleText text={params.LaxialCatagory} />
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'flex-start',
+          maxWidth: '70%',
+          flexWrap: 'wrap',
+        }}>
         <CapsuleText text={params.LaxialCatagory} />
         <TouchableOpacity
           onPress={speak}

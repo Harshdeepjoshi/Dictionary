@@ -4,8 +4,8 @@ import HomeScreen from './Screens/HomeScreen';
 const App = () => {
   const [DisplayData, SetDisplayData] = useState({
     word: 'Alaaden',
-    LaxialCatagory: 'Preposition',
-    meaning: ['meaning'],
+    LaxialCatagory: ['Preposition'],
+    meaning: ['meaning', 'meaning', 'meaning'],
   });
 
   return (
