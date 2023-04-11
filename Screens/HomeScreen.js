@@ -3,6 +3,8 @@ import {Alert, Text, View} from 'react-native';
 import Word from '../Components/Word';
 import SearchBar from '../Components/SearchBar';
 import Meaning from '../Components/Meaning';
+import Footer from '../Components/Footer';
+import AddWord from './AddWord';
 const HomeScreen = params => {
   const [searchWord, setSearchWord] = useState('');
   function selectFile(word) {
@@ -160,9 +162,9 @@ const HomeScreen = params => {
       params.SetDisplayData(createObj(WordArray));
     }
   };
-
   return (
     <View>
+      {/* <AddWord /> */}
       <View>
         <SearchBar
           searchWord={searchWord}
@@ -176,6 +178,7 @@ const HomeScreen = params => {
       </View>
 
       <Meaning meaning={params.word.meaning} />
+      <Footer />
     </View>
   );
 };

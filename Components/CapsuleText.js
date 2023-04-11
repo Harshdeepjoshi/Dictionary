@@ -4,7 +4,12 @@ import {View, Text} from 'react-native';
 const CapsuleText = props => {
   console.log(props.text);
   return (
-    <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+    <View
+      style={{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginBottom: 5,
+      }}>
       {props.text.map(text => {
         return (
           <View
@@ -14,6 +19,7 @@ const CapsuleText = props => {
               paddingHorizontal: 8,
               paddingVertical: 4,
               width: 'auto',
+              marginEnd: 5,
             }}>
             <Text
               style={{
