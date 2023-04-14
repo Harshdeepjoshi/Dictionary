@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   Text,
   View,
@@ -8,6 +8,7 @@ import {
   Animated,
   Keyboard,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native'; // Import the useNavigation hook
 
 const SearchBar = params => {
   const [openSearch, setOpenSearch] = useState(false);
@@ -23,6 +24,8 @@ const SearchBar = params => {
     }
   };
 
+  const navigation = useNavigation(); // Get the navigation object
+
   useEffect(() => {
     Animated.timing(animatedValue, {
       toValue: openSearch ? 1 : 0,
@@ -36,19 +39,27 @@ const SearchBar = params => {
     outputRange: [500, 0],
   });
 
+  const navigateToAddWord = () => {
+    navigation.navigate('AddWord'); // Navigate to AddWord screen
+  };
+
   return (
     <View
       style={{
         height: 72,
         justifyContent: 'center',
         paddingHorizontal: 16,
+        marginTop: 13,
+        flexDirection: 'row',
       }}>
       <View
         style={{
           flexDirection: 'row',
           backgroundColor: 'white',
           height: 40,
+          width: '90%',
           borderRadius: 20,
+          marginRight: 5,
         }}>
         <View style={{padding: 12, justifyContent: 'center'}}>
           <Image
@@ -85,6 +96,23 @@ const SearchBar = params => {
           </Text>
         </TouchableOpacity>
       </View>
+      <TouchableOpacity
+        onPress={navigateToAddWord}
+        style={{
+          backgroundColor: 'green',
+          height: 38,
+          width: 38,
+          justifyContent: 'center',
+          borderRadius: 30,
+        }}>
+        <TouchableOpacity
+          style={{alignItems: 'center'}}
+          onPress={navigateToAddWord}>
+          <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
+            +
+          </Text>
+        </TouchableOpacity>
+      </TouchableOpacity>
     </View>
   );
 };

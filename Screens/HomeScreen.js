@@ -5,6 +5,7 @@ import SearchBar from '../Components/SearchBar';
 import Meaning from '../Components/Meaning';
 import Footer from '../Components/Footer';
 import AddWord from './AddWord';
+import EditMeaning from './EditMeaning';
 const HomeScreen = params => {
   const [searchWord, setSearchWord] = useState('');
   function selectFile(word) {
@@ -89,7 +90,6 @@ const HomeScreen = params => {
         break;
     }
   }
-
   function createObj(data) {
     let MeaningArray = [];
     let LaxialCatagory = [];
@@ -134,6 +134,7 @@ const HomeScreen = params => {
     if (searchWord === '') {
       return;
     }
+
     const data = selectFile(searchWord[0].toLowerCase());
     const index = binarySearch(data, searchWord);
     if (index === -1) {
@@ -163,9 +164,9 @@ const HomeScreen = params => {
     }
   };
   return (
-    <View>
+    <View style={{backgroundColor: '#4CAF50', height: '100%'}}>
       {/* <AddWord /> */}
-      <View>
+      <View style={{marginBottom: 20}}>
         <SearchBar
           searchWord={searchWord}
           setSearchWord={setSearchWord}
@@ -175,10 +176,8 @@ const HomeScreen = params => {
           word={params.word.word}
           LaxialCatagory={params.word.LaxialCatagory}
         />
+        <Meaning meaning={params.word.meaning} />
       </View>
-
-      <Meaning meaning={params.word.meaning} />
-      <Footer />
     </View>
   );
 };

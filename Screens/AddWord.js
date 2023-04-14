@@ -1,69 +1,272 @@
 import React, {useState} from 'react';
-import {View, TextInput, StyleSheet, Text} from 'react-native';
-import {Picker} from '@react-native-picker/picker';
-import {Button} from 'react-native';
-const DictionaryPage = () => {
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
+import LaxCatogries from '../Components/LaxCatogries.js';
+import {useNavigation} from '@react-navigation/native';
+const AddWord = () => {
   const [word, setWord] = useState('');
-  const [meaning, setMeaning] = useState('');
+  const [meanings, setMeanings] = useState(['']); // Using an array to store multiple meanings
   const [category, setCategory] = useState('');
-
+  const [partOfSpeech, setPartOfSpeech] = useState('');
+  const [errorMessage, setErrorMessage] = useState(''); // Add error message state variable
+  const navigation = useNavigation();
   const handleAddWord = () => {
+    // Check if the word value contains spaces
+    if (word.includes(' ')) {
+      setErrorMessage('Error: Word should not contain spaces.'); // Set error message
+      return; // Return early and do not proceed further
+    }
+
     console.log(
-      `Added word: ${word} with meaning "${meaning}" and category "${category}"`,
+      `Added word: ${word} with meanings "${meanings}" and category "${category}"`,
     );
   };
 
+  const handleAddMeaning = () => {
+    const lastMeaning = meanings[meanings.length - 1];
+    if (lastMeaning !== '') {
+      setMeanings([...meanings, '']); // Adding a new empty meaning to the array
+    }
+  };
+
+  const handleSubmit = event => {
+    event.preventDefault();
+    const errors = [];
+
+    if (word === '') {
+      errors.push('Word is required.');
+    }
+
+    if (word.includes(' ')) {
+      errors.push('Word should not contain spaces.');
+    }
+
+    // Check if any meaning is empty
+    const emptyMeaningIndex = meanings.findIndex(meaning => meaning === '');
+    if (emptyMeaningIndex !== -1) {
+      errors.push('All meanings should be filled.');
+    }
+
+    // Display all errors at once
+    if (errors.length > 0) {
+      setErrorMessage(`❗Error: ${errors.join('\n❗Error: ')}`);
+      return;
+    }
+
+    // Form data is valid, proceed with submitting
+    setErrorMessage('');
+    console.log(meanings);
+    const formattedMeanings = meanings.map(meaning => {
+      if (meaning) {
+        return `${word} (${partOfSpeech}) ${meaning}`;
+      } else {
+        return '';
+      }
+    });
+
+    const filteredMeanings = formattedMeanings.filter(
+      meaning => meaning !== '',
+    );
+
+    const formattedMeaningsString = filteredMeanings.join(', ');
+
+    console.log(formattedMeaningsString);
+  };
+
+  // Reset error message when the input changes
+  const handleInputChange = () => {
+    setErrorMessage('');
+  };
+
+  const handleMeaningChange = (index, meaning) => {
+    const updatedMeanings = [...meanings];
+    updatedMeanings[index] = meaning; // Updating the meaning at the given index
+    setMeanings(updatedMeanings);
+  };
+  const handleRemoveMeaning = index => {
+    if (meanings.length > 1) {
+      // Check if there are more than one meanings
+      const updatedMeanings = [...meanings];
+      updatedMeanings.splice(index, 1); // Removing the meaning at the given index
+      setMeanings(updatedMeanings);
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Word:</Text>
-      <TextInput
-        style={styles.input}
-        value={word}
-        onChangeText={setWord}
-        placeholder="Word"
-      />
+    <View style={{backgroundColor: '#4CAF50', height: '100%'}}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled" // Add keyboardShouldPersistTaps prop
+      >
+        {/* Back button */}
+        <View
+          style={{
+            borderRadius: 20,
+            backgroundColor: '#e0e0e0',
+            width: '17%',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: 10,
+          }}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => {
+              navigation.goBack();
+            }}>
+            <Text style={styles.backButtonText}>{'< Back'}</Text>
+          </TouchableOpacity>
+        </View>
 
-      <Text style={styles.label}>Meaning:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Meaning "
-        value={meaning}
-        onChangeText={setMeaning}
-      />
+        <TextInput
+          style={styles.input}
+          value={word}
+          placeholder="Word"
+          onChangeText={text => {
+            setWord(text);
+            handleInputChange();
+          }} // Call handleInputChange on onChangeText
+        />
 
-      <Text style={styles.label}>Category:</Text>
-      <Picker
-        selectedValue={category}
-        onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}>
-        <Picker.Item label="Noun" value="noun" />
-        <Picker.Item label="Verb" value="verb" />
-        <Picker.Item label="Adjective" value="adjective" />
-        <Picker.Item label="Adverb" value="adverb" />
-      </Picker>
+        <LaxCatogries setPartOfSpeech={setPartOfSpeech} />
 
-      <Button title="Add Word" onPress={handleAddWord} />
+        {/* Render meanings */}
+        {meanings.map((meaning, index) => (
+          <View style={styles.meaningContainer} key={index}>
+            <TextInput
+              style={styles.meaningInput}
+              placeholder={`Meaning ${index + 1}`}
+              value={meaning}
+              onChangeText={text => handleMeaningChange(index, text)}
+              multiline={true}
+            />
+            {/* Remove meaning button */}
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={() => handleRemoveMeaning(index)}>
+              <Text style={styles.deleteButtonText}>-</Text>
+            </TouchableOpacity>
+          </View>
+        ))}
+        <View style={{flexDirection: 'row-reverse', alignSelf: 'flex-end'}}>
+          {/* Add meaning button */}
+          <TouchableOpacity style={styles.addButton} onPress={handleAddMeaning}>
+            <Text style={styles.addButtonText}>+</Text>
+          </TouchableOpacity>
+          {/* Submit Button */}
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={handleSubmit}
+            disabled={meanings.length === 0} // Disable the button when no meanings are entered
+          >
+            <Text style={styles.submitButtonText}>Submit</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Render error message */}
+        {errorMessage !== '' && (
+          <View
+            style={{
+              backgroundColor: 'white',
+              marginTop: 5,
+              padding: 10,
+              paddingTop: 0,
+              borderRadius: 6,
+            }}>
+            <Text style={styles.errorText}>{errorMessage}</Text>
+          </View>
+        )}
+      </ScrollView>
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: '#fff',
+    display: 'flex',
+    padding: 20,
   },
-  label: {
+  backButton: {
+    // marginBottom: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 8,
+    paddingHorizontal: 4,
+  },
+  submitButton: {
+    backgroundColor: '#007AFF',
+    padding: 10,
+    borderRadius: 5,
+    alignSelf: 'center',
+  },
+  submitButtonText: {
+    color: '#FFFFFF',
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 5,
+  },
+  addButton: {
+    backgroundColor: 'green',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 25,
+    width: 40,
+    height: 40,
+    marginLeft: 10,
+    // marginRight: ,
+  },
+  addButtonText: {
+    fontSize: 20,
+    color: '#fff',
+  },
+  deleteButton: {
+    backgroundColor: '#e0e0e0',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 25,
+    width: 30,
+    height: 30,
+    marginLeft: 10,
+  },
+  deleteButtonText: {
+    fontSize: 20,
+    color: 'red',
   },
   input: {
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
     padding: 10,
+    backgroundColor: 'white',
     marginBottom: 10,
+    width: '85%',
+    borderRadius: 5,
+  },
+  meaningContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 10,
+  },
+  meaningInput: {
+    backgroundColor: 'white',
+    flex: 1,
+    marginRight: 10,
+    marginBottom: 10,
+    minHeight: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 5,
+  },
+  errorText: {
+    color: 'black',
+    fontSize: 16,
+    lineHeight: 25,
+    marginTop: 10,
   },
 });
 
-export default DictionaryPage;
+export default AddWord;
