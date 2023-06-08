@@ -185,10 +185,6 @@ const HomeScreen = (params) => {
 
     if (wordToSearch!=''){
     // setSearchWord(wordToSearch)
-  
-
-
-
     console.log("Function Called ")
     
     const data = await selectFile(wordToSearch[0].toLowerCase());

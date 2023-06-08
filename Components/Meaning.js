@@ -38,17 +38,19 @@ const Meaning = (props) => {
     storedArray.splice(index,1)
       await AsyncStorage.setItem(firstLetter, JSON.stringify(storedArray));
     //   // props.setSearchWord("")
-    props.handleSearch(props.word)
+    // props.handleSearch(props.word)
     console.log("Done search")
     setModalVisible(false);
   };
   
 
   const handleEditMeaning = () => {
-    const { selectedMeaning, selectedIndex } = props;
+    // const { selectedMeaning, selectedIndex } = props;
     navigation.navigate('EditMeaning', {
       selectedMeaning: selectedMeaning,
-      selectedIndex: selectedIndex,
+      selectedIndex: selectedMeaning.split("--%")[1],
+      word:props.word,
+      handleSearch:props.handleSearch
     });
     setModalVisible(false);
   };
@@ -80,7 +82,7 @@ const Meaning = (props) => {
                 paddingVertical: 4,
               }}>
               <Text>- </Text>
-              <Text style={{ color: 'black' }}>{mean}</Text>
+              <Text style={{ color: 'black' }}>{mean.split('--%')[0]}</Text>
             </TouchableOpacity>
           );
         })}

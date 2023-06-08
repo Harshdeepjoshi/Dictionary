@@ -6,22 +6,38 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const EditMeaning = ({navigation, route}) => {
   const [errorMessage, setErrorMessage] = useState(''); // Add error message state variable
+
   const selectedMeaning = route.params.selectedMeaning;
   const selectedIndex = route.params.selectedIndex;
-
-  const [meaning, serMeaning] = useState(selectedMeaning);
+  const word = route.params.word
+  const [meaning, serMeaning] = useState(selectedMeaning.split('--%')[0]);
 
   // Handle back button press
   const handleBackButtonPress = () => {
     navigation.goBack();
   };
 
-  // Handle submit button press
-  const handleSubmitButtonPress = () => {
-    // Implement submit button functionality here
+  const handleSubmitButtonPress = async() => {
+      console.log("Now editing---")  
+      console.log("Meaning to edit is ",selectedMeaning)
+      console.log("The edited word is is ", meaning)
+      const firstLetter = word.toLowerCase()[0];
+      const index = Number(selectedMeaning.split('--%')[1])
+      console.log("The index to be edited is on index ", index)
+      let  storedArray = await AsyncStorage.getItem(firstLetter);
+      console.log("Got the array ")
+      storedArray = JSON.parse(storedArray)
+      console.log("The index checked from stored data", storedArray[index])
+      storedArray[index] = storedArray[index].split(')')[0]+')'+meaning
+      console.log("stored meaning on index ", index , " is ", storedArray[index])
+      await AsyncStorage.setItem(firstLetter, JSON.stringify(storedArray));
+      // props.handleSearch(route.params.word)
+      console.log("search word is ", word)
+      route.params.handleSearch(word)
+      // setModalVisible(false); 
   };
 
   // Handle delete button press
