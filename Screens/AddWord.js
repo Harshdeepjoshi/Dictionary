@@ -6,9 +6,11 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from 'react-native';
 import LaxCatogries from '../Components/LaxCatogries.js';
 import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const AddWord = () => {
   const [word, setWord] = useState('');
   const [meanings, setMeanings] = useState(['']); // Using an array to store multiple meanings
@@ -28,6 +30,64 @@ const AddWord = () => {
     );
   };
 
+  const storeData = async meaning => {
+    console.log(meaning);
+    console.log('storeData Called');
+    let retrievedData = [];
+    try {
+      const value = await AsyncStorage.getItem('addedMeanings');
+      if (value !== null) {
+        console.log('Got Value');
+        console.log(value);
+        retrievedData = JSON.parse(value);
+        // console.log(retrievedData.length);
+      }
+    } catch (error) {
+      console.log('Error while getting data from AsyncStorage: ' + error);
+    }
+    // console.log(retrievedData.length);
+    let foundMeaning = false;
+    console.log('Start');
+
+    for (let i = 0; i < retrievedData.length; i++) {
+      if (retrievedData[i].word === meaning.word) {
+        foundMeaning = true;
+        console.log('retrievedData[i].meanings', retrievedData[i].meanings);
+
+        for (let j = 0; j < meaning.meanings.length; j++) {
+          retrievedData[i].meanings.push(meaning.meanings[j]);
+        }
+      }
+    }
+    console.log('Doneee');
+    if (!foundMeaning) {
+      retrievedData.push(meaning);
+    }
+    console.log('Finalizing string');
+    const finalString = JSON.stringify(retrievedData);
+    console.log('finalString', finalString);
+    try {
+      await AsyncStorage.setItem('addedMeanings', finalString);
+    } catch (error) {
+      console.log('Error while saving data to AsyncStorage: ' + error);
+    }
+  };
+
+  const retrieveData = async () => {
+    console.log('retrieveData Called');
+    let retrievedData = [];
+    try {
+      const value = await AsyncStorage.getItem('addedMeanings');
+      if (value !== null) {
+        console.log('Got Value');
+        retrievedData = JSON.parse(value);
+      }
+    } catch (error) {
+      console.log('Error while getting data from AsyncStorage: ' + error);
+    }
+    return retrievedData;
+  };
+
   const handleAddMeaning = () => {
     const lastMeaning = meanings[meanings.length - 1];
     if (lastMeaning !== '') {
@@ -36,6 +96,7 @@ const AddWord = () => {
   };
 
   const handleSubmit = event => {
+    console.log('Handle submit called');
     event.preventDefault();
     const errors = [];
 
@@ -61,22 +122,26 @@ const AddWord = () => {
 
     // Form data is valid, proceed with submitting
     setErrorMessage('');
-    console.log(meanings);
-    const formattedMeanings = meanings.map(meaning => {
-      if (meaning) {
-        return `${word} (${partOfSpeech}) ${meaning}`;
-      } else {
-        return '';
-      }
+
+    storeData({
+      word: word,
+      meanings: meanings,
     });
+    // const formattedMeanings = meanings.map(meaning => {
+    //   if (meaning) {
+    //     return `${word} (${partOfSpeech}) ${meaning}`;
+    //   } else {
+    //     return '';
+    //   }
+    // });
 
-    const filteredMeanings = formattedMeanings.filter(
-      meaning => meaning !== '',
-    );
+    // const filteredMeanings = formattedMeanings.filter(
+    //   meaning => meaning !== '',
+    // );
+    // console.log(meaningss);
+    // const formattedMeaningsString = filteredMeanings.join(', ');
 
-    const formattedMeaningsString = filteredMeanings.join(', ');
-
-    console.log(formattedMeaningsString);
+    // console.log(formattedMeaningsString);
   };
 
   // Reset error message when the input changes

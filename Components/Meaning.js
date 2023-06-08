@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   View,
@@ -6,37 +6,51 @@ import {
   StyleSheet,
   TouchableOpacity,
   Modal,
-} from 'react-native'; // Import Modal from react-native
-import PropTypes from 'prop-types'; // Import PropTypes for prop validation
-import {useNavigation} from '@react-navigation/native'; // Import the useNavigation hook
+} from 'react-native';
+import PropTypes from 'prop-types';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Meaning = props => {
-  const [modalVisible, setModalVisible] = useState(false); // State to control the visibility of the modal
-  const [selectedMeaning, setSelectedMeaning] = useState(''); // State to keep track of selected meaning
-  const [selectedIndex, setSelectedIndex] = useState(-1); // State to keep track of selected index
-  const navigation = useNavigation(); // Get the navigation object
-
-  // Function to handle long press on a meaning
+const Meaning = (props) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedMeaning, setSelectedMeaning] = useState('');
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const navigation = useNavigation();
+  // const [savedWord , setSavedWord]=useState(props.wor)
   const handleMeaningLongPress = (meaning, index) => {
-    setSelectedMeaning(meaning); // Set the selected meaning
-    setSelectedIndex(index); // Set the selected index
-    setModalVisible(true); // Set the modal visible
+    setSelectedMeaning(meaning);
+    setSelectedIndex(index);
+    setModalVisible(true);
   };
-
-  // Function to handle delete meaning option
-  const handleDeleteMeaning = () => {
-    props.onDeleteMeaning(); // Call the onDeleteMeaning prop which should be passed from parent component
-    setModalVisible(false); // Close the modal
+  const handleDeleteMeaning = async () => {
+    
+    // const { selectedIndex } = props;
+    console.log("Meaning to delete is ",selectedMeaning)
+    console.log("The wprd from props is ", props.word)
+    const firstLetter = props.word.toLowerCase()[0];
+    const index = Number(selectedMeaning.split('--%')[1])
+    console.log("The index to be deleted is", index)
+    let  storedArray = await AsyncStorage.getItem(firstLetter);
+    console.log("Got the array ")
+    storedArray = JSON.parse(storedArray)
+    // const updatedArray= storedArray.slice(index,1)
+    console.log("The index checked from stored data", storedArray[index])
+    storedArray.splice(index,1)
+      await AsyncStorage.setItem(firstLetter, JSON.stringify(storedArray));
+    //   // props.setSearchWord("")
+    props.handleSearch(props.word)
+    console.log("Done search")
+    setModalVisible(false);
   };
+  
 
-  // Function to handle edit meaning option
   const handleEditMeaning = () => {
+    const { selectedMeaning, selectedIndex } = props;
     navigation.navigate('EditMeaning', {
-      selectedMeaning: selectedMeaning, // Pass the selected meaning as prop
-      selectedIndex: selectedIndex, // Pass the selected index as prop
-    }); // Navigate to AddWord screen
-    // (selectedMeaning, selectedIndex); // Pass the selected meaning and its index
-    setModalVisible(false); // Close the modal
+      selectedMeaning: selectedMeaning,
+      selectedIndex: selectedIndex,
+    });
+    setModalVisible(false);
   };
 
   return (
@@ -51,14 +65,14 @@ const Meaning = props => {
         maxHeight: '69%',
         padding: 10,
       }}>
-      <Text style={{color: '#757575'}}>Means:</Text>
+      <Text style={{ color: '#757575' }}>Means:</Text>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         {props.meaning.map((mean, index) => {
           const backgroundColor = index % 2 === 0 ? 'white' : '#F0F0F0';
           return (
             <TouchableOpacity
               key={index}
-              onLongPress={() => handleMeaningLongPress(mean, index)} // Handle long press on a meaning
+              onLongPress={() => handleMeaningLongPress(mean, index)}
               style={{
                 flexDirection: 'row',
                 backgroundColor,
@@ -66,17 +80,16 @@ const Meaning = props => {
                 paddingVertical: 4,
               }}>
               <Text>- </Text>
-              <Text style={{color: 'black'}}>{mean}</Text>
+              <Text style={{ color: 'black' }}>{mean}</Text>
             </TouchableOpacity>
           );
         })}
       </ScrollView>
 
-      {/* Modal for delete/edit meaning options */}
       <Modal visible={modalVisible} transparent>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <TouchableOpacity onPress={handleDeleteMeaning}>
+          <TouchableOpacity onPress={() => handleDeleteMeaning()}>
               <Text style={styles.modalOption}>Delete Meaning</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handleEditMeaning}>

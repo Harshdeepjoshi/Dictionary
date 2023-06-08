@@ -15,8 +15,9 @@ const SearchBar = params => {
   const [animatedValue] = useState(new Animated.Value(0));
   const inputRef = useRef(null);
   const HandleTextChange = text => {
+    if (text!=''){
     params.setSearchWord(text);
-  };
+  }};
   const handlePress = () => {
     if (params.searchWord != '') {
       params.handleSearch();
