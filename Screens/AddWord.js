@@ -123,25 +123,25 @@ const AddWord = () => {
     // Form data is valid, proceed with submitting
     setErrorMessage('');
 
-    storeData({
-      word: word,
-      meanings: meanings,
-    });
-    // const formattedMeanings = meanings.map(meaning => {
-    //   if (meaning) {
-    //     return `${word} (${partOfSpeech}) ${meaning}`;
-    //   } else {
-    //     return '';
-    //   }
+    // storeData({
+    //   word: word,
+    //   meanings: meanings,
     // });
+    const formattedMeanings = meanings.map(meaning => {
+      if (meaning) {
+        return `${word} (${partOfSpeech}) ${meaning}`;
+      } else {
+        return '';
+      }
+    });
 
-    // const filteredMeanings = formattedMeanings.filter(
-    //   meaning => meaning !== '',
-    // );
-    // console.log(meaningss);
-    // const formattedMeaningsString = filteredMeanings.join(', ');
+    const filteredMeanings = formattedMeanings.filter(
+      meaning => meaning !== '',
+    );
+    // console.log(meanings);
+    const formattedMeaningsString = filteredMeanings.join(', ');
 
-    // console.log(formattedMeaningsString);
+    console.log(formattedMeaningsString);
   };
 
   // Reset error message when the input changes

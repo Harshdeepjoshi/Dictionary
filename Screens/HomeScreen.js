@@ -128,6 +128,8 @@ const HomeScreen = (params) => {
       case 'z':
         filePath = ZData;
         break;
+      default:
+        return []
     }
 
     if (filePath !== '') {
@@ -136,7 +138,6 @@ const HomeScreen = (params) => {
       await AsyncStorage.setItem(word, JSON.stringify(data));
       return data;
     }
-
     return [];
   };
 
@@ -219,7 +220,6 @@ const HomeScreen = (params) => {
 
       params.SetDisplayData(createObj(indexedWordArray));
     }
-    
   }
     
     if (searchWord === '') {
@@ -278,6 +278,7 @@ const HomeScreen = (params) => {
           setSearchWord={setSearchWord} 
           searchWord={searchWord}
           handleSearch={searchingAlgo} 
+          selectFile={selectFile}
           />
       </View>
     </View>
